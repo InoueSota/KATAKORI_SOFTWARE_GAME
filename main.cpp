@@ -1,16 +1,15 @@
-﻿#include <Novice.h>
+﻿#include "main.h"
 
-const char kWindowTitle[] = "LC1A_03_";
+const char kWindowTitle[] = "トゲ";
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ライブラリの初期化
-	Novice::Initialize(kWindowTitle, 1280, 720);
+	Novice::Initialize(kWindowTitle, Screen::kWindowWidth, Screen::kWindowHeight);
 
-	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	//画像読み込み
+	int explanation = Novice::LoadTexture("./Resources/Debug/Explanation.png");
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -18,12 +17,55 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::BeginFrame();
 
 		// キー入力を受け取る
-		memcpy(preKeys, keys, 256);
-		Novice::GetHitKeyStateAll(keys);
+		Key::Update();
+
+		//コントローラー
+		Controller::SetState();
 
 		///
 		/// ↓更新処理ここから
 		///
+
+		switch (scene)
+		{
+		case TITLE:
+			break;
+		case INGAME:
+
+			//初期化
+			if (Key::IsTrigger(DIK_R)){
+				player.Init();
+				snake.Init();
+			}
+
+			//プレイヤーアップデート
+			player.Update();
+
+			//敵アップデート
+			snake.Update();
+
+			//スクロール値をアップデートする
+			screen.SetScroll(player);
+
+			//線の位置を画面内に固定する
+			//ingame.DebagUpdate(player);
+
+			break;
+		case OUTGAME:
+			break;
+		}
+
+		//BGM
+		switch (scene)
+		{
+		case TITLE:
+			break;
+		case INGAME:
+			break;
+		case OUTGAME:
+			break;
+		}
+
 
 		///
 		/// ↑更新処理ここまで
@@ -33,6 +75,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
+		switch (scene)
+		{
+		case TITLE:
+			break;
+		case INGAME:
+
+			//背景描画
+			ingame.BackGroundDraw();
+			//グリッド線描画
+			ingame.DebagDraw(screen);
+			//敵描画
+			snake.Draw(screen);
+			//プレイヤー描画
+			player.Draw(screen);
+
+			//制作中の操作説明を一時的に描画する
+			Novice::DrawSprite(Screen::kWindowWidth - 420, Screen::kWindowHeight - 220, explanation, 1, 1, 0.0f, WHITE);
+
+			break;
+		case OUTGAME:
+			break;
+		}
+
 		///
 		/// ↑描画処理ここまで
 		///
@@ -41,7 +106,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::EndFrame();
 
 		// ESCキーが押されたらループを抜ける
-		if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
+		if (Key::IsTrigger(DIK_ESCAPE)) {
 			break;
 		}
 	}
