@@ -118,7 +118,7 @@ void Snake::Follow() {
 void Snake::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture){
-		head = Novice::LoadTexture("./Resources/Debug/head.png");
+		head = Novice::LoadTexture("./Resources/Debugs/head.png");
 		mIsLoadTexture = true;
 	}
 

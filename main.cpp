@@ -9,7 +9,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Novice::Initialize(kWindowTitle, Screen::kWindowWidth, Screen::kWindowHeight);
 
 	//画像読み込み
-	int explanation = Novice::LoadTexture("./Resources/Debug/Explanation.png");
+	int explanation = Novice::LoadTexture("./Resources/Debugs/Explanation.png");
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
